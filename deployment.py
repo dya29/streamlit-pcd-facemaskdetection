@@ -159,7 +159,7 @@ def main():
 def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
     image = frame.to_ndarray(format="bgr24")
     while True:
-  		(locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
+  	  (locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
                   # loop lokasi wajah yang terdeteksi dan lokasi terkaitnya
       for (box, pred) in zip(locs, preds):
                       	# unpack the bounding box and predictions
