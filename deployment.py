@@ -19,6 +19,8 @@ model_path = "mask_detector.model"
 model = load_model(model_path)
 
 def detect_and_predict_mask(frame, faceNet, maskNet):
+	if frame :
+		st.text("halo")
 	# ambil dimensi frame dan kemudian membuat construct a blob dari dimensi tersebut
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
