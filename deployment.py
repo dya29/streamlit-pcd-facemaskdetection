@@ -19,8 +19,6 @@ model_path = "mask_detector.model"
 model = load_model(model_path)
 
 def detect_and_predict_mask(frame, faceNet, maskNet):
-	if frame :
-		st.write("halo")
 	# ambil dimensi frame dan kemudian membuat construct a blob dari dimensi tersebut
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
@@ -164,6 +162,7 @@ def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
 	(locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
                   # loop lokasi wajah yang terdeteksi dan lokasi terkaitnya
 	for (box, pred) in zip(locs, preds):
+		print("hhalo")
                       	# unpack the bounding box and predictions
 		(startX, startY, endX, endY) = box
 		(mask, withoutMask) = pred
