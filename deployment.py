@@ -104,7 +104,7 @@ def main():
     maskNet = load_model("mask_detector.model")
 
     if use_webcam:
-	video_frame_callback()
+        video_frame_callback()
         # vid = cv2.VideoCapture(0)
         # while True:
         #     ret, frame = vid.read()  # Baca frame dari webcam
@@ -135,8 +135,8 @@ def main():
         #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Ubah format frame menjadi RGB untuk Streamlit
         #     stframe.image(frame, channels="RGB")  # Menampilkan frame dengan deteksi masker di area yang telah disediakan
 
-        vid.release()
-        cv2.destroyAllWindows()
+        # vid.release()
+        # cv2.destroyAllWindows()
 
         st.success('Video is Processed')
         st.stop()
