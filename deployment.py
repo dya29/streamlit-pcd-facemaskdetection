@@ -96,8 +96,8 @@ def main():
     #temporary file name 
     tfflie = tempfile.NamedTemporaryFile(delete=False)
     # membuatm model face detector dari disk serialized
-    prototxtPath = r"face_detector\deploy.prototxt"
-    weightsPath = r"face_detector\res10_300x300_ssd_iter_140000.caffemodel"
+    prototxtPath = r"face_detector/deploy.prototxt"
+    weightsPath = r"face_detector/res10_300x300_ssd_iter_140000.caffemodel"
     faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
     maskNet = load_model("mask_detector.model")
 
