@@ -7,7 +7,7 @@ import tempfile
 import streamlit as st
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model as lm
 import numpy as np
 
 
@@ -17,8 +17,12 @@ mp_drawing = mp.solutions.drawing_utils
 
 # Load the trained model
 model_path = "mask_detector.model"
-model = load_model(model_path)
 
+@st.cache_resource 
+def load_model():
+     return lm(model_path)
+
+model = load_model()
 def detect_and_predict_mask(frame, faceNet, maskNet):
 	# ambil dimensi frame dan kemudian membuat construct a blob dari dimensi tersebut
 	(h, w) = frame.shape[:2]
@@ -93,13 +97,13 @@ def main():
     #file uploader
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png"])
     
-    #temporary file name 
-    tfflie = tempfile.NamedTemporaryFile(delete=False)
-    # membuatm model face detector dari disk serialized
-    prototxtPath = "face_detector/deploy.prototxt"
-    weightsPath = "face_detector/res10_300x300_ssd_iter_140000.caffemodel"
-    faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
-    maskNet = load_model("mask_detector.model")
+    # #temporary file name 
+    # tfflie = tempfile.NamedTemporaryFile(delete=False)
+    # # membuatm model face detector dari disk serialized
+    # prototxtPath = "face_detector/deploy.prototxt"
+    # weightsPath = "face_detector/res10_300x300_ssd_iter_140000.caffemodel"
+    # faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
+    # maskNet = load_model("mask_detector.model")
 
     # if use_webcam:
         # video_frame_callback(av.VideoFrame)
@@ -158,7 +162,7 @@ def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
     prototxtPath = "face_detector/deploy.prototxt"
     weightsPath = "face_detector/res10_300x300_ssd_iter_140000.caffemodel"
     faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
-    maskNet = load_model("mask_detector.model")
+    maskNet = model
 	# while True:
                   # loop lokasi wajah yang terdeteksi dan lokasi terkaitnya
     image = frame.to_ndarray(format="bgr24")
