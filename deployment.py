@@ -102,7 +102,7 @@ def main():
     maskNet = load_model("mask_detector.model")
 
     if use_webcam:
-        vid = cv2.VideoCapture(1)
+        vid = cv2.VideoCapture(0)
         while True:
             ret, frame = vid.read()  # Baca frame dari webcam
 
