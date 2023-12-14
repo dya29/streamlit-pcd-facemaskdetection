@@ -1,4 +1,6 @@
 import cv2
+import av
+from streamlit_webrtc import WebRtcMode, webrtc_streamer
 import mediapipe as mp
 import tempfile
 import streamlit as st
@@ -152,5 +154,22 @@ def main():
 
         st.subheader(f"Predicted: {prediction_label}")
         st.subheader(f"Accuracy: {prediction_confidence:.2f}%")
+
+def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
+	image = frame.to_ndarray(format="bgr24")
+	return av.VideoFrame.from_ndarray(image, format="bgr24")
+
+
+webrtc_ctx = webrtc_streamer(
+    key="sample",
+    mode=WebRtcMode.SENDRECV,
+    video_frame_callback=video_frame_callback,
+    media_stream_constraints={"video": True, "audio": False},
+    rtc_configuration={
+        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+    },
+    async_processing=True,
+)
+
 if __name__ == '__main__':
     main()
