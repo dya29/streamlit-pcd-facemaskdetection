@@ -1,4 +1,5 @@
 import cv2
+import cvzone
 import av
 from streamlit_webrtc import WebRtcMode, webrtc_streamer
 import mediapipe as mp
@@ -83,13 +84,10 @@ def predict_mask(image):
 def main():
 
     #title 
-    st.title('Face Mask Detection App')
-    st.write('Please choice a detection method')
-
-    st.subheader('Video Realtime')
+    
     #creating a button for webcam
-    use_webcam = st.button('Detect Mask')
-    stframe = st.empty()
+    # use_webcam = st.button('Detect Mask')
+    # stframe = st.empty()
     
     st.subheader('Upload a File')
     #file uploader
@@ -103,7 +101,7 @@ def main():
     faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
     maskNet = load_model("mask_detector.model")
 
-    if use_webcam:
+    # if use_webcam:
         # video_frame_callback(av.VideoFrame)
         # vid = cv2.VideoCapture(0)
         # while True:
@@ -138,10 +136,10 @@ def main():
         # vid.release()
         # cv2.destroyAllWindows()
 
-        st.success('Video is Processed')
-        st.stop()
-    else:
-        st.write("")
+    #     st.success('Video is Processed')
+    #     st.stop()
+    # else:
+    #     st.write("")
 
     if uploaded_file is not None:
         st.image(uploaded_file, caption='Uploaded Image.', use_column_width=50)
@@ -157,29 +155,38 @@ def main():
         st.subheader(f"Accuracy: {prediction_confidence:.2f}%")
 
 def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
-	image = frame.to_ndarray(format="bgr24")
+    prototxtPath = "face_detector/deploy.prototxt"
+    weightsPath = "face_detector/res10_300x300_ssd_iter_140000.caffemodel"
+    faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
+    maskNet = load_model("mask_detector.model")
 	# while True:
-	(locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
                   # loop lokasi wajah yang terdeteksi dan lokasi terkaitnya
-	for (box, pred) in zip(locs, preds):
-		print("hhalo")
-                      	# unpack the bounding box and predictions
-		(startX, startY, endX, endY) = box
-		(mask, withoutMask) = pred
-	  	
-	  	                    # tentukkan class label dan color yang akan kita gunakan membuat the bounding box and text
-		label = "Mask" if mask > withoutMask else "No Mask"
-		color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-	  	
-	  	                    # masukkan the probability pada label
-		label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
-	  	
-	  	                    # menampilkan label dan bounding box rectangle pada output frame
-		cvzone.putText(image, label, (startX, startY - 10),
-		cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
-		cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
-	return av.VideoFrame.from_ndarray(image, format="bgr24")
+    image = frame.to_ndarray(format="bgr24")
+    while True:
+        (locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
+        for (box, pred) in zip(locs, preds):
+            (startX, startY, endX, endY) = box
+            # unpack the bounding box and predictions
+            (mask, withoutMask) = pred
+            
+            # tentukkan class label dan color yang akan kita gunakan membuat the bounding box and text
+            label = "Mask" if mask > withoutMask else "No Mask"
+            print(label)
+            color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+            
+                                # masukkan the probability pada label
+            label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
+            
+                                # menampilkan label dan bounding box rectangle pada output frame
+            cv2.putText(image, label, (startX, startY - 10),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+            cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+        return av.VideoFrame.from_ndarray(image, format="bgr24")
 
+st.title('Face Mask Detection App')
+st.write('Please choice a detection method')
+
+st.subheader('Video Realtime')
 
 webrtc_ctx = webrtc_streamer(
     key="sample",
