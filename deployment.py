@@ -159,9 +159,9 @@ def main():
 def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
     image = frame.to_ndarray(format="bgr24")
     while True:
-  	  (locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
+  	(locs, preds) = detect_and_predict_mask(image, faceNet, maskNet)
                   # loop lokasi wajah yang terdeteksi dan lokasi terkaitnya
-      for (box, pred) in zip(locs, preds):
+      	for (box, pred) in zip(locs, preds):
                       	# unpack the bounding box and predictions
   	      (startX, startY, endX, endY) = box
   	      (mask, withoutMask) = pred
@@ -177,7 +177,7 @@ def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
   	      cv2.putText(image, label, (startX, startY - 10),
   	      cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
   	      cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
-	  return av.VideoFrame.from_ndarray(image, format="bgr24")
+    return av.VideoFrame.from_ndarray(image, format="bgr24")
 
 
 webrtc_ctx = webrtc_streamer(
