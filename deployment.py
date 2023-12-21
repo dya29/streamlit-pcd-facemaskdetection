@@ -18,11 +18,11 @@ mp_drawing = mp.solutions.drawing_utils
 # Load the trained model
 model_path = "mask_detector.model"
 
-@st.cache_resource 
-def load_model():
-     return lm(model_path)
+# @st.cache_resource 
+# def load_model():
+#      return lm(model_path)
 
-model = load_model()
+model = lm(model_path)
 def detect_and_predict_mask(frame, faceNet, maskNet):
 	# ambil dimensi frame dan kemudian membuat construct a blob dari dimensi tersebut
 	(h, w) = frame.shape[:2]
